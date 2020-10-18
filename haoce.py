@@ -17,6 +17,25 @@ def flatten_dict(raw,root_name = None):
 def filter_html_tag(text):
     return re.sub("<[^>]*?>","",text)
 
+def obj2dict(obj):
+    if not  hasattr(obj,"__dict__"):
+        return obj
+    result = {}
+    for key, val in obj.__dict__.items():
+        if key.startswith("_"):
+            continue
+        element = []
+        if isinstance(val, list):
+            for item in val:
+                element.append(obj2dict(item))
+        else:
+            element = obj2dict(val)
+        result[key] = element
+    return result
+
+class LoginFailedException(Exception):
+    pass
+
 class HaoCe:
     class UserInfo:
         def __init__(self,uid,name,school,term,number,college_name,head,**kwargs):
@@ -75,7 +94,7 @@ class HaoCe:
         def __init__(self,book_id,book,book_info,book_writer,book_img,school,user_cnt,book_pdf,book_page,book_isbn,book_word_cnt,term_key,topic_cnt,ctime,type,haoce = None,**kwargs):
             self.id = book_id
             self.name = book
-            self.info = book_info
+            self.info = filter_html_tag(book_info)
             self.writer = book_writer
             self.img = book_img
             self.school = school
@@ -324,18 +343,17 @@ class HaoCe:
             before_read_page = lambda page,time : None,
             after_read_page = lambda page,time : None,
             callback = lambda : None,
+            status = None
         ):
-            if end_page == None: 
-                end_page = self.__page_count + 1
-            if start_page < 0:
-                raise Exception("start_page must greater than 0!")
-            if start_page > end_page:
-                raise Exception("start_page less than end_page!")
-            if end_page > self.__page_count:
-                raise Exception("end_page must less than page_count!")
-
+            if end_page == None:end_page = self.__page_count + 1
+            if start_page < 0:raise Exception("start_page must greater than 0!")
+            if start_page > end_page:raise Exception("start_page less than end_page!")
+            if end_page > self.__page_count + 1:raise Exception("end_page must less than page_count!")
+            if not status:status = HaoCe.ReadingTaskStatus()
             async def task():
+                status.current_page_count = end_page - start_page
                 for page in range(start_page,end_page):
+                    status.current_page = page
                     page_read_time = read_time_generater(page)
                     before_read_page(page,page_read_time)
                     await asyncio.sleep(page_read_time)
@@ -343,6 +361,20 @@ class HaoCe:
                     after_read_page(page,time)
                 callback()
             return task
+
+    class ReadingTaskStatus:
+        def __init__(self):
+            self.is_running = False
+            self.is_complete = False
+            self.start_time = 0
+            self.complete_time = 0
+            self.current_book_id = 0
+            self.chapter_list = []
+            self.current_chapter_index = 0
+            self.current_chapter_id = 0
+            self.current_page = 0
+            self.current_page_count = 0
+            self._current_task = None
 
     def __init__(self,username,password):
         self.__session = requests.session()
@@ -430,7 +462,7 @@ class HaoCe:
             response_json = await response.json()
             if response_json['error'] != 0: 
                 await self.close()
-                raise Exception("Login failed!")
+                raise LoginFailedException()
             return response_json
 
     async def check_open_id(self):
