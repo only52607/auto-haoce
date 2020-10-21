@@ -477,9 +477,12 @@ class HaoCe:
                 self.__user_info = self.UserInfo(**response_json['data']['_cu'])
             return response_json
 
-    async def login_if_not(self):
+    async def is_login(self):
         response = await self.check_open_id()
-        if 'redirect' in response:
+        return 'redirect' not in response
+
+    async def login_if_not(self):
+        if not await self.is_login():
             print("账号未登录，正在登录。")
             await self.login()
     
@@ -511,7 +514,8 @@ class HaoCe:
         headers = self.__get_dict_default_headers({
             "Referer": "https://appclient.haoce.com/app/page/v2bookMy",
         })
-        async with self.__session.post(self.__base_url + "/book/user/?block_id=0",data=post_data,headers=headers) as response:
+        #/book/user/?block_id=0
+        async with self.__session.post(self.__base_url + "/book/user/",data=post_data,headers=headers) as response:
             response_json = await response.json()
             return list(map(lambda data:self.UserBookInfo(**data,classes=response_json['data']['class'],haoce = self),response_json['data']['me_book']))
 

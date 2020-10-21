@@ -1,0 +1,364 @@
+
+{
+  "header": {
+    "reportVersion": 2,
+    "event": "Allocation failed - JavaScript heap out of memory",
+    "trigger": "FatalError",
+    "filename": "report.20201021.180953.9836.0.001.json",
+    "dumpEventTime": "2020-10-21T18:09:53Z",
+    "dumpEventTimeStamp": "1603274993631",
+    "processId": 9836,
+    "threadId": null,
+    "cwd": "D:\\WorkSpaces\\Python\\Haoce\\frontend-haoce",
+    "commandLine": [
+      "node",
+      "D:\\WorkSpaces\\Python\\Haoce\\frontend-haoce\\node_modules\\.bin\\\\..\\@vue\\cli-service\\bin\\vue-cli-service.js",
+      "serve",
+      "--mode",
+      "development",
+      "--dashboard"
+    ],
+    "nodejsVersion": "v12.16.2",
+    "wordSize": 32,
+    "arch": "ia32",
+    "platform": "win32",
+    "componentVersions": {
+      "node": "12.16.2",
+      "v8": "7.8.279.23-node.34",
+      "uv": "1.34.2",
+      "zlib": "1.2.11",
+      "brotli": "1.0.7",
+      "ares": "1.15.0",
+      "modules": "72",
+      "nghttp2": "1.40.0",
+      "napi": "5",
+      "llhttp": "2.0.4",
+      "http_parser": "2.9.3",
+      "openssl": "1.1.1e",
+      "cldr": "36.0",
+      "icu": "65.1",
+      "tz": "2019c",
+      "unicode": "12.1"
+    },
+    "release": {
+      "name": "node",
+      "lts": "Erbium",
+      "headersUrl": "https://nodejs.org/download/release/v12.16.2/node-v12.16.2-headers.tar.gz",
+      "sourceUrl": "https://nodejs.org/download/release/v12.16.2/node-v12.16.2.tar.gz",
+      "libUrl": "https://nodejs.org/download/release/v12.16.2/win-x86/node.lib"
+    },
+    "osName": "Windows_NT",
+    "osRelease": "10.0.19041",
+    "osVersion": "Windows 10 Home China",
+    "osMachine": "i686",
+    "cpus": [
+      {
+        "model": "Intel(R) Pentium(R) Gold G5420 CPU @ 3.80GHz",
+        "speed": 3792,
+        "user": 18921109,
+        "nice": 0,
+        "sys": 27049437,
+        "idle": 190622671,
+        "irq": 2031468
+      },
+      {
+        "model": "Intel(R) Pentium(R) Gold G5420 CPU @ 3.80GHz",
+        "speed": 3792,
+        "user": 17996171,
+        "nice": 0,
+        "sys": 21489593,
+        "idle": 197107203,
+        "irq": 276203
+      },
+      {
+        "model": "Intel(R) Pentium(R) Gold G5420 CPU @ 3.80GHz",
+        "speed": 3792,
+        "user": 22101703,
+        "nice": 0,
+        "sys": 25932984,
+        "idle": 188558281,
+        "irq": 166718
+      },
+      {
+        "model": "Intel(R) Pentium(R) Gold G5420 CPU @ 3.80GHz",
+        "speed": 3792,
+        "user": 21601343,
+        "nice": 0,
+        "sys": 24028171,
+        "idle": 190963453,
+        "irq": 132859
+      }
+    ],
+    "networkInterfaces": [
+      {
+        "name": "以太网 5",
+        "internal": false,
+        "mac": "0a:00:27:00:00:0c",
+        "address": "fe80::182:767c:fdd3:a2a3",
+        "netmask": "ffff:ffff:ffff:ffff::",
+        "family": "IPv6",
+        "scopeid": 12
+      },
+      {
+        "name": "以太网 5",
+        "internal": false,
+        "mac": "0a:00:27:00:00:0c",
+        "address": "192.168.56.1",
+        "netmask": "255.255.255.0",
+        "family": "IPv4"
+      },
+      {
+        "name": "以太网",
+        "internal": false,
+        "mac": "80:fa:5b:6e:f3:27",
+        "address": "fe80::f09d:907a:4f89:ef2a",
+        "netmask": "ffff:ffff:ffff:ffff::",
+        "family": "IPv6",
+        "scopeid": 6
+      },
+      {
+        "name": "以太网",
+        "internal": false,
+        "mac": "80:fa:5b:6e:f3:27",
+        "address": "125.218.238.139",
+        "netmask": "255.255.255.192",
+        "family": "IPv4"
+      },
+      {
+        "name": "WLAN",
+        "internal": false,
+        "mac": "d4:d2:52:2f:ee:37",
+        "address": "fe80::918e:8652:590:a130",
+        "netmask": "ffff:ffff:ffff:ffff::",
+        "family": "IPv6",
+        "scopeid": 4
+      },
+      {
+        "name": "WLAN",
+        "internal": false,
+        "mac": "d4:d2:52:2f:ee:37",
+        "address": "10.30.108.247",
+        "netmask": "255.255.248.0",
+        "family": "IPv4"
+      },
+      {
+        "name": "Loopback Pseudo-Interface 1",
+        "internal": true,
+        "mac": "00:00:00:00:00:00",
+        "address": "::1",
+        "netmask": "ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff",
+        "family": "IPv6",
+        "scopeid": 0
+      },
+      {
+        "name": "Loopback Pseudo-Interface 1",
+        "internal": true,
+        "mac": "00:00:00:00:00:00",
+        "address": "127.0.0.1",
+        "netmask": "255.0.0.0",
+        "family": "IPv4"
+      }
+    ],
+    "host": "DESKTOP-9E0JD8K"
+  },
+  "javascriptStack": {
+    "message": "No stack.",
+    "stack": [
+      "Unavailable."
+    ]
+  },
+  "nativeStack": [
+  ],
+  "javascriptHeap": {
+    "totalMemory": 402661376,
+    "totalCommittedMemory": 402661376,
+    "usedMemory": 385010976,
+    "availableMemory": 703099140,
+    "memoryLimit": 1098907648,
+    "heapSpaces": {
+      "read_only_space": {
+        "memorySize": 262144,
+        "committedMemory": 262144,
+        "capacity": 22612,
+        "used": 22612,
+        "available": 0
+      },
+      "new_space": {
+        "memorySize": 1048576,
+        "committedMemory": 1048576,
+        "capacity": 1048016,
+        "used": 0,
+        "available": 1048016
+      },
+      "old_space": {
+        "memorySize": 288976896,
+        "committedMemory": 288976896,
+        "capacity": 278099076,
+        "used": 273482336,
+        "available": 4616740
+      },
+      "code_space": {
+        "memorySize": 1998848,
+        "committedMemory": 1998848,
+        "capacity": 1900544,
+        "used": 1760448,
+        "available": 140096
+      },
+      "map_space": {
+        "memorySize": 2101248,
+        "committedMemory": 2101248,
+        "capacity": 1675760,
+        "used": 1675760,
+        "available": 0
+      },
+      "large_object_space": {
+        "memorySize": 107692032,
+        "committedMemory": 107692032,
+        "capacity": 107562460,
+        "used": 107562460,
+        "available": 0
+      },
+      "code_large_object_space": {
+        "memorySize": 581632,
+        "committedMemory": 581632,
+        "capacity": 507360,
+        "used": 507360,
+        "available": 0
+      },
+      "new_large_object_space": {
+        "memorySize": 0,
+        "committedMemory": 0,
+        "capacity": 1048016,
+        "used": 0,
+        "available": 1048016
+      }
+    }
+  },
+  "resourceUsage": {
+    "userCpuSeconds": 1122.58,
+    "kernelCpuSeconds": 113.953,
+    "cpuConsumptionPercent": 0.500008,
+    "maxRss": 923869184,
+    "pageFaults": {
+      "IORequired": 23333768,
+      "IONotRequired": 0
+    },
+    "fsActivity": {
+      "reads": 8636,
+      "writes": 32711
+    }
+  },
+  "libuv": [
+  ],
+  "workers": [
+  ],
+  "environmentVariables": {
+    "=D:": "D:\\WorkSpaces\\Python\\Haoce\\frontend-haoce",
+    "ALLUSERSPROFILE": "C:\\ProgramData",
+    "APPDATA": "C:\\Users\\86182\\AppData\\Roaming",
+    "BABEL_ENV": "development",
+    "classpath": "%TOMCAT_HOME%\\lib\\servlet-api.jar",
+    "CommonProgramFiles": "C:\\Program Files (x86)\\Common Files",
+    "CommonProgramFiles(x86)": "C:\\Program Files (x86)\\Common Files",
+    "CommonProgramW6432": "C:\\Program Files\\Common Files",
+    "COMPUTERNAME": "DESKTOP-9E0JD8K",
+    "ComSpec": "C:\\WINDOWS\\system32\\cmd.exe",
+    "dp0": "D:\\WorkSpaces\\Python\\Haoce\\frontend-haoce\\node_modules\\.bin\\",
+    "DriverData": "C:\\Windows\\System32\\Drivers\\DriverData",
+    "FLUTTER_STORAGE_BASE_URL": "https://storage.flutter-io.cn",
+    "FORCE_COLOR": "1",
+    "GRADLE_HOME": "D:\\Program Files\\JetBrains\\IntelliJ IDEA Community Edition 2019.3.4\\plugins\\android\\lib\\templates\\gradle\\wrapper",
+    "HOMEDRIVE": "C:",
+    "HOMEPATH": "\\Users\\86182",
+    "INTEL_DEV_REDIST": "C:\\Program Files (x86)\\Common Files\\Intel\\Shared Libraries\\",
+    "JAVA_HOME": "D:\\Development_Kit\\jdk-10.0.1",
+    "LOCALAPPDATA": "C:\\Users\\86182\\AppData\\Local",
+    "LOGONSERVER": "\\\\DESKTOP-9E0JD8K",
+    "LUA_HOME": "D:\\Development_Kit\\Lua\\lua-5.2.4_Win64_bin",
+    "MAVEN_HOME": "D:\\Development_Kit\\apache-maven-3.6.1",
+    "NODE_ENV": "development",
+    "NODE_HOME": "D:\\Development_Kit\\node-v12.16.2-win-x86",
+    "NUMBER_OF_PROCESSORS": "4",
+    "OneDrive": "C:\\Users\\86182\\OneDrive",
+    "OneDriveConsumer": "C:\\Users\\86182\\OneDrive",
+    "OS": "Windows_NT",
+    "Path": "D:\\WorkSpaces\\Python\\Haoce\\frontend-haoce\\node_modules\\.bin;D:\\WorkSpaces\\Python\\Haoce\\node_modules\\.bin;D:\\WorkSpaces\\Python\\node_modules\\.bin;D:\\WorkSpaces\\node_modules\\.bin;D:\\node_modules\\.bin;D:\\Development_Kit\\node-v12.16.2-win-x86;C:\\Program Files (x86)\\Common Files\\Intel\\Shared Libraries\\redist\\intel64_win\\compiler;D:\\Development_Kit\\jdk-10.0.1\\bin\\;C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath;C:\\Program Files (x86)\\Intel\\iCLS Client\\;C:\\Program Files\\Intel\\iCLS Client\\;C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;C:\\Windows\\System32\\OpenSSH\\;C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\Program Files (x86)\\Intel\\Intel(R) Management Engine Components\\DAL;C:\\Program Files\\Intel\\Intel(R) Management Engine Components\\DAL;C:\\Program Files (x86)\\Intel\\Intel(R) Management Engine Components\\IPT;C:\\Program Files\\Intel\\Intel(R) Management Engine Components\\IPT;C:\\Program Files\\Intel\\WiFi\\bin\\;C:\\Program Files\\Common Files\\Intel\\WirelessCommon\\;D:\\Program Files\\Microsoft VS Code\\bin;D:\\Development_Kit\\TDM-GCC-64\\bin;D:\\Development_Kit\\apache-maven-3.6.1\\bin;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;D:\\Program Files\\Git\\cmd;%TOMCAT_HOME%\\bin;D:\\Development_Kit\\Python;D:\\Development_Kit\\android-decompiler;D:\\Development_Kit\\android-decompiler\\dex2jar-2.0;D:\\Development_Kit\\Python\\Scripts;D:\\Development_Kit\\node-v12.16.2-win-x86;D:\\Program Files\\JetBrains\\IntelliJ IDEA Community Edition 2019.3.4\\plugins\\android\\lib\\templates\\gradle\\wrapper;D:\\Development_Kit\\Lua\\lua-5.2.4_Win64_bin;D:\\Development_Kit\\Python\\Scripts\\;D:\\Development_Kit\\Python\\;C:\\Program Files\\MySQL\\MySQL Shell 8.0\\bin\\;C:\\Users\\86182\\AppData\\Local\\Microsoft\\WindowsApps;C:\\Users\\86182\\AppData\\Local\\GitHubDesktop\\bin;C:\\Users\\86182\\AppData\\Local\\Microsoft\\WindowsApps;D:\\Program Files\\Bandizip\\",
+    "PATHEXT": ".COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JSE;.WSF;.WSH;.MSC",
+    "PROCESSOR_ARCHITECTURE": "x86",
+    "PROCESSOR_ARCHITEW6432": "AMD64",
+    "PROCESSOR_IDENTIFIER": "Intel64 Family 6 Model 158 Stepping 10, GenuineIntel",
+    "PROCESSOR_LEVEL": "6",
+    "PROCESSOR_REVISION": "9e0a",
+    "ProgramData": "C:\\ProgramData",
+    "ProgramFiles": "C:\\Program Files (x86)",
+    "ProgramFiles(x86)": "C:\\Program Files (x86)",
+    "ProgramW6432": "C:\\Program Files",
+    "PROMPT": "$P$G",
+    "PSModulePath": "C:\\Program Files\\WindowsPowerShell\\Modules;C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\Modules",
+    "PUBLIC": "C:\\Users\\Public",
+    "PUB_HOSTED_URL": "https://pub.flutter-io.cn",
+    "SESSIONNAME": "Console",
+    "SystemDrive": "C:",
+    "SystemRoot": "C:\\WINDOWS",
+    "TEMP": "C:\\Users\\86182\\AppData\\Local\\Temp",
+    "TMP": "C:\\Users\\86182\\AppData\\Local\\Temp",
+    "TOMECAT_HOME": "D:\\Program Files (x86)\\apache-tomcat-9.0.27",
+    "USERDOMAIN": "DESKTOP-9E0JD8K",
+    "USERDOMAIN_ROAMINGPROFILE": "DESKTOP-9E0JD8K",
+    "USERNAME": "oooonly",
+    "USERPROFILE": "C:\\Users\\86182",
+    "VBOX_MSI_INSTALL_PATH": "D:\\Program Files (x86)\\VirtualBox\\",
+    "VUE_APP_CLI_UI_URL": "",
+    "VUE_CLI_API_MODE": "true",
+    "VUE_CLI_CONTEXT": "D:\\WorkSpaces\\Python\\Haoce\\frontend-haoce",
+    "VUE_CLI_ENTRY_FILES": "[\"D:\\\\WorkSpaces\\\\Python\\\\Haoce\\\\frontend-haoce\\\\src\\\\main.js\"]",
+    "VUE_CLI_IPC": "vue-cli-I5qQev4c0",
+    "VUE_CLI_PROJECT_ID": "kw_NgT4DQI",
+    "VUE_CLI_TRANSPILE_BABEL_RUNTIME": "true",
+    "WEBPACK_DEV_SERVER": "true",
+    "windir": "C:\\WINDOWS",
+    "_prog": "node"
+  },
+  "sharedObjects": [
+    "D:\\Development_Kit\\node-v12.16.2-win-x86\\node.exe",
+    "C:\\WINDOWS\\SYSTEM32\\ntdll.dll",
+    "C:\\WINDOWS\\System32\\KERNEL32.DLL",
+    "C:\\WINDOWS\\System32\\KERNELBASE.dll",
+    "C:\\WINDOWS\\System32\\WS2_32.dll",
+    "C:\\WINDOWS\\System32\\RPCRT4.dll",
+    "C:\\WINDOWS\\System32\\PSAPI.DLL",
+    "C:\\WINDOWS\\SYSTEM32\\dbghelp.dll",
+    "C:\\WINDOWS\\System32\\ADVAPI32.dll",
+    "C:\\WINDOWS\\System32\\msvcrt.dll",
+    "C:\\WINDOWS\\SYSTEM32\\IPHLPAPI.DLL",
+    "C:\\WINDOWS\\System32\\sechost.dll",
+    "C:\\WINDOWS\\SYSTEM32\\USERENV.dll",
+    "C:\\WINDOWS\\System32\\ucrtbase.dll",
+    "C:\\WINDOWS\\System32\\USER32.dll",
+    "C:\\WINDOWS\\System32\\win32u.dll",
+    "C:\\WINDOWS\\System32\\GDI32.dll",
+    "C:\\WINDOWS\\System32\\gdi32full.dll",
+    "C:\\WINDOWS\\System32\\msvcp_win.dll",
+    "C:\\WINDOWS\\System32\\CRYPT32.dll",
+    "C:\\WINDOWS\\System32\\bcrypt.dll",
+    "C:\\WINDOWS\\SYSTEM32\\WINMM.dll",
+    "C:\\WINDOWS\\System32\\IMM32.DLL",
+    "C:\\WINDOWS\\SYSTEM32\\powrprof.dll",
+    "C:\\WINDOWS\\SYSTEM32\\UMPDC.dll",
+    "C:\\WINDOWS\\SYSTEM32\\CRYPTBASE.DLL",
+    "C:\\WINDOWS\\system32\\uxtheme.dll",
+    "C:\\WINDOWS\\System32\\combase.dll",
+    "C:\\WINDOWS\\system32\\mswsock.dll",
+    "C:\\WINDOWS\\SYSTEM32\\kernel.appcore.dll",
+    "C:\\WINDOWS\\System32\\bcryptprimitives.dll",
+    "C:\\WINDOWS\\system32\\napinsp.dll",
+    "C:\\WINDOWS\\system32\\pnrpnsp.dll",
+    "C:\\WINDOWS\\system32\\wshbth.dll",
+    "C:\\WINDOWS\\system32\\NLAapi.dll",
+    "C:\\WINDOWS\\SYSTEM32\\DNSAPI.dll",
+    "C:\\WINDOWS\\System32\\NSI.dll",
+    "C:\\WINDOWS\\System32\\winrnr.dll",
+    "C:\\WINDOWS\\SYSTEM32\\dhcpcsvc6.DLL",
+    "C:\\WINDOWS\\SYSTEM32\\dhcpcsvc.DLL"
+  ]
+}

@@ -57,7 +57,11 @@ async def get_book_isbn(book_id,session:auth.UserSession = Depends(auth.get_curr
 
 @router.get("/{book_id}/data")
 async def get_book_data(book_id,session:auth.UserSession = Depends(auth.get_current_user_session)):
-    return obj2dict(await session.get_book_data(book_id))
+    try:
+        book = await session.get_book(book_id)
+    except:
+        raise HTTPException(404,detail="No such book_id")
+    return obj2dict(await book.get_data()) 
 
 @router.get("/{book_id}/chapters")
 async def get_book_chapters(book_id,session:auth.UserSession = Depends(auth.get_current_user_session)):
