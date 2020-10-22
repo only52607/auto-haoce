@@ -1,5 +1,6 @@
 <template>
   <a-card hoverable :title="'自动阅读'" class="haoce-user-card" :bordered="false">
+    <a-spin v-if="loading" />
     <template v-if="task.start_time == 0">
       <a-empty
         image="https://gw.alipayobjects.com/mdn/miniapp_social/afts/img/A*pevERLJC9v0AAAAAAAAAAABjAQAAAQ/original"
@@ -8,7 +9,7 @@
         }"
       >
         <template v-slot:description>
-          <span>你还没有创建过阅读任务噢</span>
+          <span>你最近没有创建阅读任务噢</span>
         </template>
         <a-button type="primary" @click="$emit('create')">创建任务</a-button>
       </a-empty>
@@ -27,7 +28,11 @@
         </a-result>
       </template>
       <template v-else-if="!task.is_running">
-        <a-result status="warning" title="任务已被终止">
+        <a-result
+          status="warning"
+          title="任务已被终止"
+          :sub-title="`阅读书籍：${bookName}`"
+        >
           <template #extra>
             <a-button type="primary" @click="$emit('create')">创建新任务</a-button>
           </template>
@@ -37,7 +42,7 @@
         <p>
           <icon-font type="icon-book" />
           正在阅读： {{bookName}}
-          <a-button type="danger" size="small" ghost>停止</a-button>
+          <a-button type="danger" size="small" @click="$emit('stop')" ghost>停止</a-button>
         </p>
         <a-row :gutter="0" justify="space-around" align="middle" style="margin-bottom:10px">
           <a-col :span="12">
@@ -65,20 +70,21 @@
             direction="vertical"
             size="small"
           >
-            <template v-for="chapter in currentChapters">
-              <a-step :title="chapter.chapter" :description="chapter.description" />
-            </template>
+            <a-step
+              v-for="chapter in selectedChapters"
+              :key="chapter.cp_id"
+              :title="chapter.chapter"
+              :description="chapter.description"
+            />
           </a-steps>
         </a-collapse-panel>
       </a-collapse>
     </template>
 
     <template #extra>
-      <a-button @click="$emit('update')">更新</a-button>
-      <!-- <a-button type="danger" v-if="showCancel" @click="$emit('stop')">结束任务</a-button>
-      <template v-else>
-        <a-button type="primary" v-if="!showEmpty" @click="$emit('create')">创建新任务</a-button>
-      </template>-->
+      <a-button :loading="loading" @click="$emit('update')" type="dashed">
+        <redo-outlined #icon />
+      </a-button>
     </template>
   </a-card>
 </template>
@@ -93,34 +99,21 @@ import {
   watchEffect,
   onMounted,
 } from "vue";
+import { RedoOutlined } from "@ant-design/icons-vue";
 import bookStore from "@/utils/books.js";
+import timeFormater from "@/utils/timeFormater.js";
+
+let selectedChapters = ref([]);
 
 export default {
-  components: {},
-  props: ["task"],
+  components: { RedoOutlined },
+  props: ["task", "loading"],
   setup() {
     const { ctx } = getCurrentInstance();
     let bookName = computed(() => {
-      return bookStore.books.value[ctx.task.current_book_id].book_info.name;
-    });
-    let currentChapters = computed(() => {
-      let bookData = bookStore.bookDatas[ctx.task.current_book_id];
-      let chapters = {};
-      bookData.chapters.forEach((element) => {
-        chapters[element.cp_id] = element;
-      });
-      let _currentChapters = [];
-      ctx.task.chapter_list.forEach((element, index) => {
-        let pushedElement = chapters[element];
-        if (index < ctx.task.current_chapter_index)
-          pushedElement.description = "阅读完毕";
-        else if (index > ctx.task.current_chapter_index)
-          pushedElement.description = "等待阅读";
-        else
-          pushedElement.description = `正在阅读：${ctx.task.current_page}/${ctx.task.current_page_count}`;
-        _currentChapters.push(pushedElement);
-      });
-      return _currentChapters;
+      let book = bookStore.books.value[ctx.task.current_book_id];
+      if (!book) return "";
+      return book.book_info.name;
     });
     let currentStatus = computed(() => {
       if (ctx.task.is_complete) return "finish";
@@ -128,38 +121,41 @@ export default {
       else return "error";
     });
     let nowTime = ref(0);
-    function formatSeconds(value) {
-      let theTime = parseInt(value);
-      let middle = 0;
-      let hour = 0;
-      if (theTime > 60) {
-        middle = parseInt(theTime / 60);
-        theTime = parseInt(theTime % 60);
-        if (middle > 60) {
-          hour = parseInt(middle / 60);
-          middle = parseInt(middle % 60);
-        }
-      }
-      let result = "" + parseInt(theTime) + "秒";
-      if (middle > 0) {
-        result = "" + parseInt(middle) + "分" + result;
-      }
-      if (hour > 0) {
-        result = "" + parseInt(hour) + "时" + result;
-      }
-      return result;
-    }
-    onMounted(() => {
+    onMounted(async () => {
       nowTime.value = Date.now();
       setInterval(() => (nowTime.value += 1000), 1000);
     });
     return {
       bookName,
-      currentChapters,
       currentStatus,
       nowTime,
-      formatSeconds
+      formatSeconds: timeFormater.formatSeconds,
+      selectedChapters,
     };
+  },
+  watch: {
+    //只能放在watch里生效，奇怪的bug
+    async task(value) {
+      await bookStore.updateBookData(value.current_book_id);
+      let bookData = bookStore.bookDatas[this.task.current_book_id];
+      if (!bookData) return [];
+      let chapters = {};
+      bookData.chapters.forEach((element) => {
+        chapters[element.cp_id] = element;
+      });
+      let _currentChapters = [];
+      this.task.chapter_list.forEach((element, index) => {
+        let pushedElement = chapters[element];
+        if (index < this.task.current_chapter_index)
+          pushedElement.description = "阅读完毕";
+        else if (index > this.task.current_chapter_index)
+          pushedElement.description = "等待阅读";
+        else
+          pushedElement.description = `正在阅读：${this.task.current_page}/${this.task.current_page_count}`;
+        _currentChapters.push(pushedElement);
+      });
+      selectedChapters.value = _currentChapters;
+    },
   },
 };
 </script>

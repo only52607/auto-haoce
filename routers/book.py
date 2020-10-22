@@ -30,7 +30,7 @@ async def post_reading_task(book_id:str,chapters_id:List[str],session:auth.UserS
     async def read_task():
         session.reading_status.is_running = True
         session.reading_status.is_complete = False
-        session.reading_status.start_time = time.time()
+        session.reading_status.start_time = int(time.time())
         for index,chapter_id in enumerate(chapters_id):
             session.reading_status.current_chapter_id = chapter_id
             session.reading_status.current_chapter_index = index
@@ -39,7 +39,7 @@ async def post_reading_task(book_id:str,chapters_id:List[str],session:auth.UserS
             await task()
         session.reading_status.is_running = False
         session.reading_status.is_complete = True
-        session.reading_status.complete_time = time.time()
+        session.reading_status.complete_time = int(time.time())
     session.reading_status._current_task = asyncio.create_task(read_task())
     return {"message":"ok"}
 

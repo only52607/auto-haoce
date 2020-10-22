@@ -18,6 +18,7 @@ async function updateBooks(){
 
 async function updateBookData(bookId){
     bookDatas[bookId] = (await api.get(`/books/${bookId}/data`)).data
+    bookDatas[bookId].chapters_view_data = (await api.get(`/books/${bookId}/chapters_view_data`)).data
 }
 
 export default {
