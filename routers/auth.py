@@ -83,14 +83,14 @@ sessions = dict()
 
 async def create_access_token(username:str,password:str,expires_delta: Optional[timedelta] = None):
     if username in sessions:
-        if sessions[username].password != password:raise Exception("Error password!")
+        if sessions[username].password != password:raise LoginFailedException()
     else:
         haoce = HaoCe(username,password)
         await haoce.login_if_not()
         sessions[username] = UserSession(haoce = haoce,username=username,password=password)
 
     if expires_delta:expire = datetime.utcnow() + expires_delta
-    else: expire = datetime.utcnow() + timedelta(minutes=60)
+    else: expire = datetime.utcnow() + timedelta(minutes=14400)
     
     return jwt.encode({"exp": expire,"username" : username}, SECRET_KEY, algorithm=ALGORITHM)
 
@@ -107,18 +107,23 @@ async def get_current_user_session(token: str = Depends(scheme)):
         user_session = sessions[user_name]
     except JWTError:
         raise credentials_exception
+    except Exception:
+        raise credentials_exception
     return user_session
 
 @router.post("/")
 async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     try:
         token = await create_access_token(form_data.username,form_data.password)
-    except Exception as e:
+    except LoginFailedException as e:
         raise HTTPException(status_code = status.HTTP_400_BAD_REQUEST, detail="Incorrect username or password")
+    except Exception as e:
+        raise HTTPException(status_code = status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
     return {"access_token": token, "token_type": "bearer"}
 
 @router.delete("/")
 async def logout(user_session: UserSession = Depends(get_current_user_session)):
     await user_session.haoce.close()
+    sessions.pop(user_session.username)
     del user_session
     return {"message","ok"}

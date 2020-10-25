@@ -29,13 +29,18 @@ import HaoceUserCard from "@/components/HaoceUserCard.vue";
 import ReadingTaskCard from "@/components/ReadingTaskCard.vue";
 import BookcaseCard from "@/components/BookcaseCard.vue";
 import bookStore from "@/utils/books.js";
+import { message } from 'ant-design-vue'
+import api from "@/utils/api.js"
+import { useRoute, useRouter } from 'vue-router'
 
 export default {
   name: "Home",
   components: {
     HaoceUserCard,ReadingTaskCard,BookcaseCard
   },
-  setup() {
+  setup(props,context) {
+    const router = useRouter()
+    const route = useRoute()
     const { ctx } = getCurrentInstance();
     let loadingTask = ref(false)
     let loadingUser = ref(false)
@@ -87,53 +92,53 @@ export default {
     });
     async function updateUserSetting(){
       loadingUser.value = true
-      user.value = (await ctx.$api.get("/user/info")).data
-      setting.value = (await ctx.$api.get("/user/setting")).data
+      user.value = (await api.get("/user/info")).data
+      setting.value = (await api.get("/user/setting")).data
       loadingUser.value = false
     }
     async function updateTask(){
       loadingTask.value = true
-      task.value = (await ctx.$api.get("/books/reading_task")).data
+      task.value = (await api.get("/books/reading_task")).data
       loadingTask.value = false
     }
     async function logout(){
-      await ctx.$api.delete("/auth")
-      ctx.$router.replace("/auth")
+      await api.delete("/auth")
+      router.replace("/auth")
     }
     async function prepareTask(){
-      ctx.$message.warning('请选择一本书籍及阅读章节后提交任务')
+      message.warning('请选择一本书籍及阅读章节后提交任务')
       document.getElementById("bookcase").scrollIntoView(true)
-      // document.body.scrollTop = ctx.$refs.bookcase.offsetTop
     }
     async function createReadingTask(bookId,chapters){
       if (task.value.is_running){
-        ctx.$message.error('已存在一个阅读任务，无法重复提交')
+        message.error('已存在一个阅读任务，无法重复提交')
         return
       }
       try{
-        await ctx.$api.post(`/books/reading_task?book_id=${bookId}`,chapters)
+        await api.post(`/books/reading_task?book_id=${bookId}`,chapters)
         await updateTask()
-        ctx.$message.success('任务提交成功')
-
+        message.success('任务提交成功')
       }catch{
-        ctx.$message.error('任务提交失败')
+        message.error('任务提交失败')
       }
     }
     async function stopReadingTask(){
-      await ctx.$api.delete("/books/reading_task")
+      await api.delete("/books/reading_task")
       await updateTask()
-      ctx.$message.warning('任务已被停止')
+      message.warning('任务已被停止')
     }
+  
     onMounted(async ()=>{
       try{
         await updateUserSetting()
-        updateTask()
-        bookStore.updateBooks()
+        await updateTask()
+        api.isAuthorized = true
       }catch{
-        ctx.$router.replace("/auth")
+        api.isAuthorized = false
+        message.warning('请先登录')
+        router.replace("/auth")
       }
     })
-
     return {
       user,
       loadingUser,

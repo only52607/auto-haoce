@@ -86,8 +86,3 @@ async def get_book_chapters_view_data(book_id,session:auth.UserSession = Depends
 @router.get("/{book_id}/view_data")
 async def get_book_view_data(book_id,session:auth.UserSession = Depends(auth.get_current_user_session)):
     return obj2dict(await session.get_book_view_data(book_id))
-
-
-
-#22379 "6646","6647","6648","6649","6650"
-#22354 359

@@ -1,3 +1,5 @@
 __pycache__
 cookies_*
+_cookies_*
 test.py
+*.log

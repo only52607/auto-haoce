@@ -108,16 +108,16 @@ let selectedChapters = ref([]);
 export default {
   components: { RedoOutlined },
   props: ["task", "loading"],
-  setup() {
+  setup(props,context) {
     const { ctx } = getCurrentInstance();
     let bookName = computed(() => {
-      let book = bookStore.books.value[ctx.task.current_book_id];
+      let book = bookStore.books.value[props.task.current_book_id];
       if (!book) return "";
       return book.book_info.name;
     });
     let currentStatus = computed(() => {
-      if (ctx.task.is_complete) return "finish";
-      if (ctx.task.is_running) return "process";
+      if (props.task.is_complete) return "finish";
+      if (props.task.is_running) return "process";
       else return "error";
     });
     let nowTime = ref(0);
@@ -151,7 +151,7 @@ export default {
         else if (index > this.task.current_chapter_index)
           pushedElement.description = "等待阅读";
         else
-          pushedElement.description = `正在阅读：${this.task.current_page}/${this.task.current_page_count}`;
+          pushedElement.description = `正在阅读：${this.task.current_page + 1}/${this.task.current_page_count - 1}`;
         _currentChapters.push(pushedElement);
       });
       selectedChapters.value = _currentChapters;

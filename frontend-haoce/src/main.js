@@ -12,6 +12,7 @@ import bookStore from "@/utils/books.js";
 let app = createApp(App)
 app.config.globalProperties.$api = api
 app.config.globalProperties.$books = bookStore.books
+app.config.globalProperties.$isAuthorized = true
 app.use(router)
 app.use(Antd)
 // app.use(VueAwesomeSwiper)

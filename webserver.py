@@ -14,9 +14,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# app.mount("/", StaticFiles(directory="frontend-haoce/dist"), name="static")
+
 @app.get("/")
 async def root():
-    return {"message":"Hello World!"}
+    return {"message":"Hello from OOOOONLY!"}
 
 not_found_exception = {404: {"description": "Not found"}}
 

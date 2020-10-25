@@ -381,7 +381,9 @@ class HaoCe:
         self.__base_url = "https://appclient.haoce.com"
         self.__username  = username
         self.__password = password
-        self.__cookie_file = __file__[:__file__.rfind("\\")] + "\cookies\cookies_" + str(username)
+        self.__cookie_file = __file__[:__file__.rfind("\\")] + "\cookies\_cookies_" + str(username)
+        try:os.remove(self.__cookie_file)
+        except:pass
         self.__cookie_jar = aiohttp.CookieJar(unsafe=True)
         try:
             self.__cookie_jar.load(self.__cookie_file)
@@ -435,7 +437,8 @@ class HaoCe:
             "Origin": "https://appclient.haoce.com",
             "X-Requested-With": "XMLHttpRequest",
             "Referer": "https://appclient.haoce.com/app/page/v2home",
-            "User-Agent": "Mozilla/5.0 (Linux; Android 10; RMX1901 Build/QKQ1.190918.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/80.0.3987.99 Mobile Safari/537.36 Html5Plus/1.0 (Immersed/32.0)",
+            "User-Agent": "Mozilla/5.0 (Linux; Android 10; XIAOMI Build/QKQ1.190918.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/80.0.3987.99 Mobile Safari/537.36 Html5Plus/1.0 (Immersed/32.0)",
+            # "User-Agent": "Mozilla/5.0 (Linux; Android 10; RMX1901 Build/QKQ1.190918.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/80.0.3987.99 Mobile Safari/537.36 Html5Plus/1.0 (Immersed/32.0)",
             "Content-Type": "application/x-www-form-urlencoded",
             "Sec-Fetch-Site": "same-origin",
             "Sec-Fetch-Mode": "cors",
@@ -445,7 +448,9 @@ class HaoCe:
 
     async def close(self):
         await self.__session.close()
-
+        try:os.remove(self.__cookie_file)
+        except:pass
+        
     async def login(self):
         post_data = {
             "MB_wid":"app.haoce.com"
@@ -458,11 +463,11 @@ class HaoCe:
             "Sec-Fetch-Site": "cross-site"
         })
         async with self.__session.post(self.__base_url + "//app/login/post",data=post_data,headers=headers) as response:
-            self.__cookie_jar.save(self.__cookie_file)
             response_json = await response.json()
             if response_json['error'] != 0: 
                 await self.close()
                 raise LoginFailedException()
+            self.__cookie_jar.save(self.__cookie_file)
             return response_json
 
     async def check_open_id(self):
@@ -483,7 +488,7 @@ class HaoCe:
 
     async def login_if_not(self):
         if not await self.is_login():
-            print("账号未登录，正在登录。")
+            # print("账号未登录，正在登录。")
             await self.login()
     
     async def get_user_info(self) -> UserInfo:

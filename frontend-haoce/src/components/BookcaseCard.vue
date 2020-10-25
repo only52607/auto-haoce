@@ -1,5 +1,11 @@
 <template>
   <a-card hoverable :title="'我的书架'" :bordered="false" class="book-case-card">
+    <template #extra>
+      <a-button :loading="loadingBooks" @click="updateBooks" type="dashed">
+        <redo-outlined #icon />
+      </a-button>
+    </template>
+    <a-spin v-if="loadingBooks" />
     <a-row
       type="flex"
       justify="center"
@@ -10,11 +16,16 @@
       <template v-for="book in books">
         <a-col :xs="6" :sm="6" :md="6" :lg="6" :xl="6" style="margin:0px;">
           <a-tooltip placement="topLeft" :title="book.book_info.name">
-            <a-card hoverable @click="onBookSeleted(book.book_id)">
+            <a-card
+              hoverable
+              @click="onBookSeleted(book.book_id)"
+              size="small"
+              style="overflow: hidden;"
+            >
               <template v-slot:cover>
                 <img :alt="book.book_info.name" :src="'https://cdn.haoce.com' + book.book_info.img" />
               </template>
-              <p class="black single-line">{{book.book_info.name}}</p>
+              <p class="black loop single-line">{{book.book_info.name}}</p>
               <p class="single-line">{{book.book_info.writer}}</p>
             </a-card>
           </a-tooltip>
@@ -31,26 +42,29 @@
       height="90%"
       @close="bookDetailVisible=false"
     >
-    <p>
-      <icon-font type="icon-class" />
-      教学班： {{selectedBookClass}}
-    </p>
-    <p>
-       已阅读：{{selectedBookData.view_data.progress/100}}%  用时： {{formatSeconds(selectedBookData.view_data.dtime)}}
-    </p>
+      <p>
+        <icon-font type="icon-class" />
+        教学班： {{selectedBookClass}}
+      </p>
+      <p>已阅读：{{selectedBookData.view_data.progress/100}}% 用时： {{formatSeconds(selectedBookData.view_data.dtime)}}</p>
       <a-button
         type="primary"
         style="margin-bottom:10px;"
         @click="bookDetailVisible=false;$emit('create-task',selectedBookId,selectedChapterIds)"
       >提交阅读任务</a-button>
-      <a-spin v-if="loadingChapters"/>
-      <a-checkbox-group v-model:value="selectedChapterIds">
-        <a-row>
-          <a-col :span="24" v-for="chapter in selectedBookData.chapters" :key="chapter.cp_id">
-            <a-checkbox :value="chapter.cp_id" :key="chapter.cp_id">{{chapter.chapter + "(" + getChapterReadInfo(chapter.cp_id) + ")"}}</a-checkbox>
-          </a-col>
-        </a-row>
-      </a-checkbox-group>
+      <a-spin v-if="loadingChapters" />
+      <template v-else>
+        <a-checkbox-group v-model:value="selectedChapterIds">
+          <a-row>
+            <a-col :span="24" v-for="chapter in selectedBookData.chapters" :key="chapter.cp_id">
+              <a-checkbox
+                :value="chapter.cp_id"
+                :key="chapter.cp_id"
+              >{{chapter.chapter + "(" + getChapterReadInfo(chapter.cp_id) + ")"}}</a-checkbox>
+            </a-col>
+          </a-row>
+        </a-checkbox-group>
+      </template>
     </a-drawer>
   </a-card>
 </template>
@@ -63,10 +77,16 @@ import {
   computed,
   watch,
   watchEffect,
+  onMounted,
 } from "vue";
 import bookStore from "@/utils/books.js";
 import timeFormater from "@/utils/timeFormater.js";
+import { RedoOutlined } from "@ant-design/icons-vue";
+import { message } from "ant-design-vue";
+import api from "@/utils/api.js";
+
 export default {
+  components: { RedoOutlined },
   data() {
     return {
       selectedChapterIds: [], //不放在data里选择框会无法点击
@@ -75,7 +95,8 @@ export default {
   props: [],
   setup() {
     const { ctx } = getCurrentInstance();
-    let loadingChapters = ref(false)
+    let loadingBooks = ref(false);
+    let loadingChapters = ref(false);
     let selectedBookId = ref(0);
     let selectedBookName = computed(() => {
       if (!bookStore.books.value[selectedBookId.value]) return "";
@@ -93,21 +114,46 @@ export default {
       return _books;
     });
     let bookDetailVisible = ref(false);
-    let selectedBookData = ref({ chapters: [],view_data:{},chapters_view_data:{} });
+    let selectedBookData = ref({
+      chapters: [],
+      view_data: {},
+      chapters_view_data: {},
+    });
+    async function updateBooks() {
+      if (!api.isAuthorized) return;
+      loadingBooks.value = true;
+      try {
+        await bookStore.updateBooks();
+      } catch {
+        message.warning("获取书架失败，正在重试");
+        // setTimeout(updateBooks, 1000)
+      }
+      loadingBooks.value = false;
+    }
+
     async function onBookSeleted(bookId) {
       selectedBookId.value = bookId;
       bookDetailVisible.value = true;
-      loadingChapters.value = true
+      loadingChapters.value = true;
       await bookStore.updateBookData(selectedBookId.value);
       let bookData = bookStore.bookDatas[selectedBookId.value];
       if (bookData) selectedBookData.value = bookData;
-      loadingChapters.value = false
+      loadingChapters.value = false;
     }
-    function getChapterReadInfo(chapterId){
-      let info = selectedBookData.value.chapters_view_data[chapterId]
-      if (!info) return "未阅读"
-      return `已阅读：${info.progress/100}% 用时：${timeFormater.formatSeconds(info.dtime)}`
+    function getChapterReadInfo(chapterId) {
+      let info = selectedBookData.value.chapters_view_data[chapterId];
+      if (!info) return "未阅读";
+      return `已阅读：${
+        info.progress / 100
+      }% 用时：${timeFormater.formatSeconds(info.dtime)}`;
     }
+    function sleep(time) {
+      return new Promise((resolve) => setTimeout(resolve, time));
+    }
+    onMounted(async () => {
+      await sleep(1000);
+      await updateBooks();
+    });
     return {
       books,
       onBookSeleted,
@@ -116,9 +162,11 @@ export default {
       selectedBookName,
       selectedBookData,
       selectedBookClass,
-      formatSeconds:timeFormater.formatSeconds,
+      formatSeconds: timeFormater.formatSeconds,
       getChapterReadInfo,
-      loadingChapters
+      loadingChapters,
+      updateBooks,
+      loadingBooks,
     };
   },
 };
@@ -128,13 +176,40 @@ export default {
 .book-case-card {
   overflow: hidden;
 }
+/* text-overflow: ellipsis; */
 .single-line {
   font-size: 5px;
+  line-height: 12px;
   overflow: hidden;
-  text-overflow: ellipsis;
+  text-overflow:ellipsis;
   white-space: nowrap;
+}
+.loop {
+  display: inline-block;
+  animation: 20s wordsLoop linear infinite normal;
 }
 .black {
   color: #2c3e50;
+}
+@keyframes wordsLoop {
+  0% {
+    transform: translateX(0px);
+    -webkit-transform: translateX(0px);
+  }
+  100% {
+    transform: translateX(-50%);
+    -webkit-transform: translateX(-50%);
+  }
+}
+
+@-webkit-keyframes wordsLoop {
+  0% {
+    transform: translateX(0px);
+    -webkit-transform: translateX(0px);
+  }
+  100% {
+    transform: translateX(-50%);
+    -webkit-transform: translateX(-50%);
+  }
 }
 </style>

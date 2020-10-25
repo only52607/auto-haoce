@@ -4,9 +4,9 @@
     justify="center"
     align="top"
     :bordered="false"
-    style="width: 100%;height: 100%"
+    style="width: 100%;height: 100%;"
   >
-    <a-col :xs="24" :sm="20" :md="12" :lg="8" :xl="6" style="align-self:center">
+    <a-col :xs="24" :sm="20" :md="12" :lg="8" :xl="6" style="align-self:center;height: 100%">
       <a-card title="好策 - 登录">
         <a-form :model="formAuth" :rules="rules" :wrapperCol="{span: 24}">
           <a-form-item name="username">
@@ -26,10 +26,17 @@
 import InputAccount from "@/components/inputs/InputAccount.vue";
 import InputPassword from "@/components/inputs/InputPassword.vue";
 import { getCurrentInstance, reactive, ref } from "vue";
+import { message } from 'ant-design-vue'
+import api from "@/utils/api.js"
+import { useRoute, useRouter } from 'vue-router'
+
 export default {
   name: "Auth",
   setup() {
     const { ctx } = getCurrentInstance();
+    const router = useRouter()
+    const route = useRoute()
+
     const formAuth = reactive({
       username: "",
       password: "",
@@ -39,7 +46,7 @@ export default {
     async function authenticate() {
       isAuthenticating.value = true;
       try {
-        let result = await ctx.$api({
+        let result = await api({
           method: "post",
           url: "/auth",
           transformRequest: [
@@ -58,11 +65,10 @@ export default {
           ],
           data: formAuth,
         });
-        ctx.$message.success("验证通过", 2);
-        ctx.$router.replace("/");
+        message.success("验证通过", 2);
+        router.replace("/");
       } catch (err) {
-        console.log(err);
-        ctx.$error({ title: "验证失败" });
+        message.error("验证失败" );
       }
       isAuthenticating.value = false;
     }

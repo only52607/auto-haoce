@@ -1,9 +1,9 @@
-let serverUrl = 'http://localhost:8001'
+let serverUrl = globalConfig.serverUrl
 let apiUrl = serverUrl
 
 let axiosInstance = axios.create({
 	baseURL:apiUrl,
-	timeout: 1000,
+	timeout: 5000,
 	headers: {
 		'Content-Type': 'application/x-www-form-urlencoded'
 	}
@@ -25,5 +25,7 @@ axiosInstance.interceptors.response.use((response) => {
     }
     return response
 })
+
+axiosInstance.isAuthorized = true
 
 export default axiosInstance
