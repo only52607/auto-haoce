@@ -1,7 +1,7 @@
 <template>
   <a-card hoverable :title="'我的书架'" :bordered="false" class="book-case-card">
     <template #extra>
-      <a-button :loading="loadingBooks" @click="updateBooks" type="dashed">
+      <a-button :loading="loadingBooks" @click="$emit('update')" type="dashed">
         <redo-outlined #icon />
       </a-button>
     </template>
@@ -82,8 +82,6 @@ import {
 import bookStore from "@/utils/books.js";
 import timeFormater from "@/utils/timeFormater.js";
 import { RedoOutlined } from "@ant-design/icons-vue";
-import { message } from "ant-design-vue";
-import api from "@/utils/api.js";
 
 export default {
   components: { RedoOutlined },
@@ -92,10 +90,9 @@ export default {
       selectedChapterIds: [], //不放在data里选择框会无法点击
     };
   },
-  props: [],
+  props: ["loadingBooks"],
   setup() {
     const { ctx } = getCurrentInstance();
-    let loadingBooks = ref(false);
     let loadingChapters = ref(false);
     let selectedBookId = ref(0);
     let selectedBookName = computed(() => {
@@ -119,18 +116,6 @@ export default {
       view_data: {},
       chapters_view_data: {},
     });
-    async function updateBooks() {
-      if (!api.isAuthorized) return;
-      loadingBooks.value = true;
-      try {
-        await bookStore.updateBooks();
-      } catch {
-        message.warning("获取书架失败，正在重试");
-        // setTimeout(updateBooks, 1000)
-      }
-      loadingBooks.value = false;
-    }
-
     async function onBookSeleted(bookId) {
       selectedBookId.value = bookId;
       bookDetailVisible.value = true;
@@ -150,10 +135,6 @@ export default {
     function sleep(time) {
       return new Promise((resolve) => setTimeout(resolve, time));
     }
-    onMounted(async () => {
-      await sleep(1000);
-      await updateBooks();
-    });
     return {
       books,
       onBookSeleted,
@@ -165,8 +146,6 @@ export default {
       formatSeconds: timeFormater.formatSeconds,
       getChapterReadInfo,
       loadingChapters,
-      updateBooks,
-      loadingBooks,
     };
   },
 };
