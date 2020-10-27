@@ -123,13 +123,17 @@ export default {
       message.warning("请选择一本书籍及阅读章节后提交任务");
       document.getElementById("bookcase").scrollIntoView(true);
     }
-    async function createReadingTask(bookId, chapters) {
+    async function createReadingTask(bookId, chapters,pageCount,pageDelay) {
       if (task.value.is_running) {
         message.error("已存在一个阅读任务，无法重复提交");
         return;
       }
+      if (chapters.length == 0) {
+        message.error("请至少选择一个阅读章节");
+        return;
+      }
       try {
-        await api.post(`/books/reading_task?book_id=${bookId}`, chapters);
+        await api.post(`/books/reading_task?book_id=${bookId}&page_count=${pageCount}&page_delay=${pageDelay}`, chapters);
         await updateTask();
         message.success("任务提交成功");
       } catch {
@@ -163,7 +167,15 @@ export default {
         router.replace("/auth");
         return;
       }
-      updateBooks();
+      let updateBookSuccess = false
+      do{
+        try{
+          await bookStore.updateBooks();
+          updateBookSuccess = true
+          loadingBooks.value = false
+        }catch{}
+      }while(!updateBookSuccess)
+      
     });
     return {
       user,

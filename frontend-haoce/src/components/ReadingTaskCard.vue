@@ -146,7 +146,7 @@ export default {
       let _currentChapters = [];
       this.task.chapter_list.forEach((element, index) => {
         let pushedElement = chapters[element];
-        if (index < this.task.current_chapter_index)
+        if (index < this.task.current_chapter_index || this.task.current_page + 1 > this.task.current_page_count - 1)
           pushedElement.description = "阅读完毕";
         else if (index > this.task.current_chapter_index)
           pushedElement.description = "等待阅读";

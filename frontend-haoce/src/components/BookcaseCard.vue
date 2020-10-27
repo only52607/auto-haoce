@@ -50,8 +50,14 @@
       <a-button
         type="primary"
         style="margin-bottom:10px;"
-        @click="bookDetailVisible=false;$emit('create-task',selectedBookId,selectedChapterIds)"
+        @click="bookDetailVisible=false;$emit('create-task',selectedBookId,selectedChapterIds,pageCount,pageDelay)"
       >提交阅读任务</a-button>
+      <div style="margin-bottom:10px;">
+        每章节页数：<a-input-number v-model:value="pageCount" :min="2" :max="50" />
+        每页阅读时间（秒）：<a-input-number v-model:value="pageDelay" :min="20" :max="600" />
+      </div>
+      
+
       <a-spin v-if="loadingChapters" />
       <template v-else>
         <a-checkbox-group v-model:value="selectedChapterIds">
@@ -92,7 +98,6 @@ export default {
   },
   props: ["loadingBooks"],
   setup() {
-    const { ctx } = getCurrentInstance();
     let loadingChapters = ref(false);
     let selectedBookId = ref(0);
     let selectedBookName = computed(() => {
@@ -103,6 +108,8 @@ export default {
       if (!bookStore.books.value[selectedBookId.value]) return "";
       return bookStore.books.value[selectedBookId.value].class_info.name;
     });
+    let pageCount  = ref(20)
+    let pageDelay = ref(90)
     let books = computed(() => {
       let _books = [];
       for (let key in bookStore.books.value) {
@@ -146,6 +153,8 @@ export default {
       formatSeconds: timeFormater.formatSeconds,
       getChapterReadInfo,
       loadingChapters,
+      pageCount,
+      pageDelay
     };
   },
 };

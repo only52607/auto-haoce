@@ -3,8 +3,7 @@ from pydantic import BaseModel
 from haoce import *
 from typing import Optional,List
 from routers import auth
-import asyncio
-import time
+import asyncio,time,random
 
 router = APIRouter()
 
@@ -22,11 +21,12 @@ async def get_reading_task(session:auth.UserSession = Depends(auth.get_current_u
     return obj2dict(session.reading_status)
 
 @router.post("/reading_task")
-async def post_reading_task(book_id:str,chapters_id:List[str],session:auth.UserSession = Depends(auth.get_current_user_session)):
+async def post_reading_task(book_id:str,chapters_id:List[str],page_count:Optional[int] = 20,page_delay:Optional[int] = 90,session:auth.UserSession = Depends(auth.get_current_user_session)):
     if session.reading_status and session.reading_status.is_running:raise HTTPException(status_code = status.HTTP_400_BAD_REQUEST, detail="Task is running!")
     chapters = await session.get_book_chapters(book_id)
     session.reading_status.current_book_id = book_id
     session.reading_status.chapter_list = chapters_id
+    session.reading_status.current_page_count = page_count
     async def read_task():
         session.reading_status.is_running = True
         session.reading_status.is_complete = False
@@ -35,7 +35,8 @@ async def post_reading_task(book_id:str,chapters_id:List[str],session:auth.UserS
             session.reading_status.current_chapter_id = chapter_id
             session.reading_status.current_chapter_index = index
             reader = await chapters[chapter_id].get_reader()
-            task = reader.get_read_task(status = session.reading_status)
+            reader.set_page_count(page_count)
+            task = reader.get_read_task(status = session.reading_status,read_time_generater = lambda page: random.randint(page_delay-10,page_delay+10))
             await task()
         session.reading_status.is_running = False
         session.reading_status.is_complete = True
