@@ -3,3 +3,4 @@ fastapi==0.78.0
 jose==1.0.0
 pydantic==1.9.1
 requests==2.25.1
+uvicorn[standard]==0.11.8
