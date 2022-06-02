@@ -4,10 +4,10 @@ services:
     build:
       context: .
     ports:
-      - "8081:8081"
+      - "8081:80"
 
   frontend:
     build:
       context: ./frontend-haoce
     ports:
-      - "80:80"
+      - "8080:80"

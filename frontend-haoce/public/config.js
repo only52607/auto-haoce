@@ -1,4 +1,4 @@
 globalConfig = {
-    serverUrl:'http://47.102.218.24:8001'
-    // serverUrl:'http://localhost:8081'
+    serverUrl:'http://120.24.57.116:8081'
+    // serverUrl:'http://localhost:8000'
 }
