@@ -23,7 +23,7 @@
     </p>
     <p>
       <icon-font type="icon-class" />
-      当前教学班： {{setting.class_info.name}}（共{{setting.class_info.student_cnt}}人）
+      当前教学班： {{setting.class_info?.name ?? ""}}（共{{setting.class_info?.student_cnt ?? "?"}}人）
     </p>
     <template #extra>
       <a-avatar :src="user.head" />

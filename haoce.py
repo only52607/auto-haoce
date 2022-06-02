@@ -71,8 +71,8 @@ class HaoCe:
 
     class UserSetting:
         def __init__(self,
-            term_id,term,user_id,school_id,start_time,end_time,ctime,s_start_time,s_end_time,book_limit,book_limit_min,term_key,end,is_school_user,block_id,
-            class_info,**kwargs
+            term,start_time,end_time,s_start_time,s_end_time,book_limit,book_limit_min,term_key,end,
+            class_info,school_id = 0, term_id = 0, user_id = 0 , is_school_user = False, ctime = 0, block_id = 0,**kwargs
         ):
             self.term_id = term_id
             self.term = term
@@ -87,7 +87,9 @@ class HaoCe:
             self.end = end
             self.is_school_user = is_school_user
             self.block_id = block_id
-
+            if isinstance(class_info, list):
+                self.class_info = None
+                return
             self.class_info = HaoCe.ClassInfo(**class_info)
 
     class BookInfo:
